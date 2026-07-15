@@ -1,5 +1,6 @@
 ﻿const Task = require('../models/Task');
-
+const { validateDueDate } = require('../utils/taskValidation'); //RDS
+ 
 // @desc  Get all tasks
 // @route GET /api/tasks
 // @access Admin
@@ -39,6 +40,11 @@ const getTaskById = async (req, res) => {
 // @access Admin
 const createTask = async (req, res) => {
   const { title, description, status, assignedTo, dueDate } = req.body;
+  const validationError = validateDueDate(dueDate);
+  // RDS
+  if (validationError) {
+    return res.status(400).json({ message: validationError });
+  }
 
   try {
     const task = await Task.create({
@@ -63,6 +69,12 @@ const updateTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: 'Task not found' });
+    //RDS
+    const validationError = validateDueDate(req.body.dueDate);
+    if (validationError) {
+      return res.status(400).json({ message: validationError });
+    }
+
     // including internal fields like createdBy or __v
     const updated = await Task.findByIdAndUpdate(
       req.params.id,

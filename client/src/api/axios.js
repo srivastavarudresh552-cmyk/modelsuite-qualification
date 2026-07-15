@@ -1,11 +1,15 @@
-﻿import axios from 'axios';
+﻿// RDS
+
+import axios from 'axios';
+import { readStoredUser } from '../utils/storage';
+
 const API = axios.create({
   baseURL: 'http://localhost:5000/api',
 });
 
 // Attach token to every request
 API.interceptors.request.use((config) => {
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  const user = readStoredUser();
   if (user?.token) {
     config.headers.Authorization = `Bearer ${user.token}`;
   }
