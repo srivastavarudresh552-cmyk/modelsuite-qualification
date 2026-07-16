@@ -1,6 +1,6 @@
 const USER_STORAGE_KEY = 'user';
 
-// RDS
+// #3
 
 const getStorage = () => {
   if (typeof window === 'undefined') return null;
