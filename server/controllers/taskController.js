@@ -1,6 +1,6 @@
 ﻿const Task = require('../models/Task');
 const { validateDueDate } = require('../utils/taskValidation'); //#3
- 
+
 // @desc  Get all tasks
 // @route GET /api/tasks
 // @access Admin
@@ -43,21 +43,19 @@ const createTask = async (req, res) => {
 
   // #3
   if (validateDueDate(dueDate)) {
-    return res.status(400).json({ message: validationError });
+    return res.status(400).json({ message: validateDueDate(dueDate) });
   }
   // #9
-  if(typeof title === "string") {return res.status(400).json({message : "Invalid Title Type"})}
-  if(typeof description === "string") {return res.status(400).json({message : "Invalid Description Type"})}
+  if (typeof title !== "string") { return res.status(400).json({ message: "Invalid Title Type" }) }
+  if (typeof description !== "string") { return res.status(400).json({ message: "Invalid Description Type" }) }
   if (
-        typeof title !== "string"||
-        typeof description !== "string" ||
-        !title.trim() ||
-        !description.trim()
-    ) {
-        return res.status(400).json({
-            message: "Title and description are required."
-        });
-    }
+    !title.trim() ||
+    !description.trim()
+  ) {
+    return res.status(400).json({
+      message: "Title and description are required."
+    });
+  }
 
   try {
     const task = await Task.create({
@@ -92,7 +90,10 @@ const updateTask = async (req, res) => {
     const updated = await Task.findByIdAndUpdate(
       req.params.id,
       { ...req.body },
-      { new: true }
+      {
+        new: true,
+        runValidators: true
+      }
     ).populate('assignedTo', 'name email');
 
     res.json(updated);
