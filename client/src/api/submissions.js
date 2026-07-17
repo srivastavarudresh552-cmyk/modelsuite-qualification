@@ -1,9 +1,7 @@
 ﻿import API from './axios';
 // but the token interceptor in axios.js must still fire (it does via the shared instance)
 export const submitTask = (taskId, formData) =>
-  API.post(`/submissions/${taskId}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  API.post(`/submissions/${taskId}`, formData);
 
 export const fetchSubmission = (taskId) => API.get(`/submissions/${taskId}`);
 

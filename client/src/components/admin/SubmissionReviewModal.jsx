@@ -7,6 +7,11 @@ const REVIEW_STATUS_CLASS = {
 };
 
 const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
+  const fileUrls = Array.isArray(submission?.fileUrls) && submission.fileUrls.length > 0
+    ? submission.fileUrls
+    : submission?.fileUrl
+      ? [submission.fileUrl]
+      : [];    // #21
 
   const handleReview = async (status) => {
     try {
@@ -82,18 +87,21 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
               <p className="text-[13px] text-text-faint italic">No notes provided.</p>
             )}
           </div>
-
-          {/* File */}
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.5px] text-text-faint mb-2">Submitted File</p>
-            {submission.fileUrl ? (
-              <a href={submission.fileUrl} target="_blank" rel="noreferrer"
-                className="flex items-center gap-2.5 text-[13px] text-primary font-medium hover:text-secondary transition-colors">
-                <span className="text-base">📎</span>
-                
-                <span className="underline underline-offset-2 truncate">{submission.fileUrl}</span>
-                <span className="text-text-faint text-[11px] shrink-0">↗ open</span>
-              </a>
+              {/* // #21 */}
+          {/* Files */}
+          <div>   
+            <p className="text-[11px] font-semibold uppercase tracking-[0.5px] text-text-faint mb-2">Submitted Files</p>
+            {fileUrls.length > 0 ? (
+              <div className="flex flex-col gap-2">
+                {fileUrls.map((fileUrl, index) => (
+                  <a key={`${fileUrl}-${index}`} href={fileUrl} target="_blank" rel="noreferrer"
+                    className="flex items-center gap-2.5 text-[13px] text-primary font-medium hover:text-secondary transition-colors">
+                    <span className="text-base">📎</span>
+                    <span className="underline underline-offset-2 truncate">{fileUrl.split('/').pop() || `Attachment ${index + 1}`}</span>
+                    <span className="text-text-faint text-[11px] shrink-0">↗ open</span>
+                  </a>
+                ))}
+              </div>
             ) : (
               <p className="text-[13px] text-text-faint italic">No file attached.</p>
             )}

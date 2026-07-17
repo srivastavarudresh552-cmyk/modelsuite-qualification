@@ -9,6 +9,18 @@ const REVIEW_STATUS_CLASS = {
   Rejected: 'status-badge-Rejected',
 };
 
+const getFileUrls = (submission) => {   // #21
+  if (Array.isArray(submission?.fileUrls) && submission.fileUrls.length > 0) {
+    return submission.fileUrls;
+  }
+
+  if (submission?.fileUrl) {
+    return [submission.fileUrl];
+  }   
+
+  return [];
+};
+
 const SubmissionsPage = () => {
   const [submissions, setSubmissions] = useState([]);
   const [reviewTarget, setReviewTarget] = useState(null);
@@ -116,16 +128,24 @@ const SubmissionsPage = () => {
                         </span>
                       </td>
 
-                      {/* File link */}
+                      {/* File links */}
                       <td className={tdCls}>
-                        {sub.fileUrl ? (
-                          <a href={sub.fileUrl} target="_blank" rel="noreferrer"
-                            className="text-primary text-[13px] hover:text-secondary underline underline-offset-2 transition-colors">
-                            View ↗
-                          </a>
-                        ) : (
-                          <span className="text-text-faint text-[13px] italic">None</span>
-                        )}
+                        {(() => {
+                          const fileUrls = getFileUrls(sub);
+
+                          return fileUrls.length > 0 ? (
+                            <div className="flex flex-col gap-1">
+                              {fileUrls.map((fileUrl, index) => (
+                                <a key={`${fileUrl}-${index}`} href={fileUrl} target="_blank" rel="noreferrer"
+                                  className="text-primary text-[13px] hover:text-secondary underline underline-offset-2 transition-colors">
+                                  {`View ${index + 1} ↗`}
+                                </a>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-text-faint text-[13px] italic">None</span>
+                          );
+                        })()}
                       </td>
 
                       {/* Submitted at — raw ISO */}
