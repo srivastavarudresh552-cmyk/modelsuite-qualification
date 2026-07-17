@@ -8,16 +8,16 @@
   --color-primary:       #3B82F6;
   --color-primary-dark:  #2563EB;
   --color-secondary:     #6B7280;
-  --color-bg-dark:       #050505;
-  --color-bg-surface:    #0D0D0D;
-  --color-bg-card:       #0D0D0D;
-  --color-bg-input:      rgba(255, 255, 255, 0.05);
-  --color-bg-hover:      rgba(255, 255, 255, 0.04);
-  --color-border:        rgba(255, 255, 255, 0.07);
-  --color-border-light:  rgba(255, 255, 255, 0.15);
-  --color-text-primary:  #F0F0F0;
-  --color-text-muted:    #6B7280;
-  --color-text-faint:    rgba(255, 255, 255, 0.35);
+  --color-bg-dark:       var(--app-bg);
+  --color-bg-surface:    var(--surface);
+  --color-bg-card:       var(--card);
+  --color-bg-input:      var(--surface-2);
+  --color-bg-hover:      rgba(59, 130, 246, 0.08);
+  --color-border:        var(--border);
+  --color-border-light:  var(--border-strong);
+  --color-text-primary:  var(--text-primary);
+  --color-text-muted:    var(--text-muted);
+  --color-text-faint:    var(--text-faint);
   --color-success:       #10B981;
   --color-danger:        #EF4444;
   --color-warning:       #F59E0B;
@@ -37,12 +37,43 @@
 ───────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
+html {
+  color-scheme: dark;
+}
+
+:root {
+  --app-bg: #060816;
+  --surface: #0f172a;
+  --surface-2: rgba(15, 23, 42, 0.92);
+  --card: rgba(15, 23, 42, 0.82);
+  --border: rgba(148, 163, 184, 0.18);
+  --border-strong: rgba(148, 163, 184, 0.3);
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-faint: rgba(248, 250, 252, 0.55);
+  --shadow-strong: 0 22px 50px rgba(2, 6, 23, 0.38);
+}
+
+:root[data-theme='light'] {
+  --app-bg: #f5f7ff;
+  --surface: #ffffff;
+  --surface-2: rgba(255, 255, 255, 0.9);
+  --card: rgba(255, 255, 255, 0.86);
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.15);
+  --text-primary: #0f172a;
+  --text-muted: #475569;
+  --text-faint: rgba(15, 23, 42, 0.56);
+  --shadow-strong: 0 18px 40px rgba(15, 23, 42, 0.12);
+}
+
 body {
   font-family: 'Inter', 'Poppins', sans-serif;
-  background: #050505;
-  color: #F0F0F0;
+  background: var(--app-bg);
+  color: var(--text-primary);
   margin: 0;
   padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -50,10 +81,10 @@ body {
 /* ─────────────────────────────────────────
    Custom Scrollbar
 ───────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.14); }
+::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.55); }
 
 /* ─────────────────────────────────────────
    Keyframe Animations
@@ -119,6 +150,42 @@ body {
 /* ─────────────────────────────────────────
    Animation utilities
 ───────────────────────────────────────── */
+.theme-toggle {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(59, 130, 246, 0.2));
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.08), 0 8px 18px rgba(2, 6, 23, 0.18);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  padding: 0;
+}
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.1), 0 12px 22px rgba(2, 6, 23, 0.2);
+}
+.theme-toggle__icon {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #f8fafc;
+  transition: transform 0.25s ease, background 0.25s ease;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+}
+.theme-toggle__icon--moon {
+  transform: translateX(20px);
+  background: linear-gradient(135deg, #fde68a, #f59e0b);
+}
+.theme-toggle__icon--sun {
+  transform: translateX(0);
+  background: linear-gradient(135deg, #fff7ed, #fbbf24);
+}
+
 .animate-modal-in     { animation: modalIn      0.2s  cubic-bezier(0.16,1,0.3,1) forwards; }
 .animate-fade-in      { animation: fadeIn       0.25s ease-out forwards; }
 .animate-fade-slide   { animation: fadeSlideIn  0.3s  cubic-bezier(0.16,1,0.3,1) forwards; }
@@ -146,19 +213,19 @@ body {
   background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
   color: #FFFFFF;
   border: none;
-  box-shadow: 0 0 0 0 rgba(59,130,246,0);
-  transition: background 0.15s ease-out, transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
+  transition: background 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
   will-change: transform, box-shadow;
 }
 .btn-gradient:hover {
   background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(59,130,246,0.28), 0 0 0 1px rgba(59,130,246,0.3);
+  box-shadow: 0 16px 32px rgba(37,99,235,0.28);
 }
 .btn-gradient:active {
   background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
   transform: translateY(0);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
 }
 
 /* Avatar gradient same as btn for admin */
@@ -175,32 +242,35 @@ body {
   align-items: center;
   gap: 10px;
   padding: 9px 12px;
-  border-radius: 8px;
-  border: none;
+  border-radius: 10px;
+  border: 1px solid transparent;
   background: transparent;
-  color: #6B7280;
+  color: var(--text-muted);
   font-size: 13.5px;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
   cursor: pointer;
   width: 100%;
   text-align: left;
-  transition: background 0.15s ease-out, color 0.15s ease-out, transform 0.15s ease-out;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
   will-change: transform, background;
 }
 .nav-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #E5E2E1;
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--text-primary);
+  border-color: rgba(59, 130, 246, 0.16);
   transform: translateX(2px);
 }
 .nav-item:hover .nav-icon {
-  color: rgba(255,255,255,0.7);
+  color: #60a5fa;
 }
 
 /* Active nav state */
 .nav-active {
-  background: rgba(59, 130, 246, 0.1) !important;
-  color: #3B82F6 !important;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.16), rgba(59, 130, 246, 0.08)) !important;
+  color: #60a5fa !important;
+  border-color: rgba(59, 130, 246, 0.24) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
 }
 .nav-active::before {
   content: '';
@@ -210,11 +280,11 @@ body {
   transform: translateY(-50%);
   width: 3px;
   height: 60%;
-  background: #3B82F6;
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
   border-radius: 0 2px 2px 0;
 }
 .nav-active .nav-icon {
-  color: #3B82F6 !important;
+  color: #60a5fa !important;
 }
 
 /* Nav icon */
@@ -222,27 +292,28 @@ body {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  color: #4B5563;
-  transition: color 0.15s ease-out;
+  color: var(--text-muted);
+  transition: color 0.2s ease-out;
 }
 
 /* ─────────────────────────────────────────
    Stat Cards
 ───────────────────────────────────────── */
 .stat-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   padding: 20px 22px;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.15s ease-out, transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  transition: border-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
   will-change: transform, box-shadow;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.12);
 }
 .stat-card:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: var(--border-strong);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  box-shadow: var(--shadow-strong);
 }
 .stat-card::after {
   content: '';
@@ -266,10 +337,11 @@ body {
    Table — Modern
 ───────────────────────────────────────── */
 .tasks-container {
-  background: rgba(255, 255, 255, 0.015);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   overflow: hidden;
+  box-shadow: var(--shadow-strong);
 }
 
 .table-header-bar {
@@ -382,21 +454,23 @@ body {
    My Tasks Card List
 ───────────────────────────────────────── */
 .task-card {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  transition: border-color 0.15s ease-out, background 0.15s ease-out, transform 0.15s ease-out;
+  transition: border-color 0.2s ease-out, background 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
   will-change: transform;
+  box-shadow: 0 10px 24px rgba(2, 6, 23, 0.08);
 }
 .task-card:hover {
-  border-color: rgba(255,255,255,0.13);
-  background: rgba(255,255,255,0.035);
+  border-color: var(--border-strong);
+  background: rgba(59, 130, 246, 0.06);
   transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(2, 6, 23, 0.15);
 }
 
 /* ─────────────────────────────────────────
@@ -414,7 +488,7 @@ body {
 ───────────────────────────────────────── */
 .sidebar-divider {
   height: 1px;
-  background: rgba(255,255,255,0.06);
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
   margin: 0 -4px;
 }
 
@@ -463,17 +537,18 @@ input, select, textarea {
 ───────────────────────────────────────── */
 .logout-btn {
   background: transparent;
-  border: none;
-  color: #4B5563;
+  border: 1px solid transparent;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 6px;
-  border-radius: 7px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.15s ease-out, background 0.15s ease-out;
+  transition: color 0.2s ease-out, background 0.2s ease-out, border-color 0.2s ease-out;
 }
 .logout-btn:hover {
   color: #EF4444;
   background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.16);
 }

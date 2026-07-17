@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 /* ── Clean SVG line-art icons (no emojis, no AI icons) ── */
 const IconDashboard = () => (
@@ -48,12 +49,13 @@ const navItems = [
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate  = useNavigate();
   const location  = useLocation();
 
   return (
     <aside className="fixed inset-y-0 left-0 w-[240px] flex flex-col z-50"
-      style={{ background: '#0D0D0D' }}>
+      style={{ background: 'var(--surface)' }}>
 
       {/* Brand */}
       <div className="flex items-center justify-center px-5 py-6">
@@ -85,7 +87,15 @@ const Sidebar = () => {
       {/* Footer */}
       <div className="px-3 pb-5">
         <div className="sidebar-divider mb-4" />
-        <div className="flex items-center justify-between gap-2 px-1">
+        <div className="flex items-center justify-between gap-2 px-1 mb-3">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle color theme"
+            className="theme-toggle"
+          >
+            <span className={`theme-toggle__icon ${theme === 'dark' ? 'theme-toggle__icon--moon' : 'theme-toggle__icon--sun'}`} />
+          </button>
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-full avatar-admin flex items-center justify-center text-[12px] font-bold text-white shrink-0">
               {user?.name?.[0]?.toUpperCase() ?? 'A'}

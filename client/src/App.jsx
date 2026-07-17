@@ -14,10 +14,19 @@ const PrivateRoute = ({ children, role }) => {
   return children;
 };
 
+function ThemeShell({ children }) {
+  return (
+    <div className="min-h-screen bg-[var(--app-bg)] text-[var(--text-primary)] transition-colors duration-300">
+      {children}
+    </div>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ThemeShell>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
@@ -58,6 +67,7 @@ function App() {
           
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        </ThemeShell>
       </BrowserRouter>
     </AuthProvider>
   );
