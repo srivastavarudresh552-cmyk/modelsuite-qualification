@@ -40,11 +40,24 @@ const getTaskById = async (req, res) => {
 // @access Admin
 const createTask = async (req, res) => {
   const { title, description, status, assignedTo, dueDate } = req.body;
-  const validationError = validateDueDate(dueDate);
+
   // #3
-  if (validationError) {
+  if (validateDueDate(dueDate)) {
     return res.status(400).json({ message: validationError });
   }
+  // #9
+  if(typeof title === "string") {return res.status(400).json({message : "Invalid Title Type"})}
+  if(typeof description === "string") {return res.status(400).json({message : "Invalid Description Type"})}
+  if (
+        typeof title !== "string"||
+        typeof description !== "string" ||
+        !title.trim() ||
+        !description.trim()
+    ) {
+        return res.status(400).json({
+            message: "Title and description are required."
+        });
+    }
 
   try {
     const task = await Task.create({

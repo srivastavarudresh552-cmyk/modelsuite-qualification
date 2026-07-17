@@ -3,9 +3,13 @@ const taskSchema = new mongoose.Schema(
   {
     title: {
       type: String,
+      required: true,
+      trim: true
     },
     description: {
       type: String,
+      required: true,
+      trim: true
     },
     status: {
       type: String,
@@ -20,7 +24,7 @@ const taskSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'User'
     },
   },
   { timestamps: true }
